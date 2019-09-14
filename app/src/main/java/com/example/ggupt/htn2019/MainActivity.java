@@ -11,13 +11,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import org.w3c.dom.Node;
+
+import java.net.Authenticator;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     Button btnCaptureImage;
     LinearLayout layout;
+    TextView test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnCaptureImage = (Button) findViewById(R.id.btn_captureImage);
         layout = (LinearLayout)findViewById(R.id.linearLayout);
+        test = (TextView)findViewById(R.id.textView);
 
         btnCaptureImage.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -55,5 +70,39 @@ public class MainActivity extends AppCompatActivity {
         image.setImageBitmap(bitmap);
         // Adds the view to the layout
         layout.addView(image);
+        test();
+    }
+
+    public void test(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.33.141.252:3000")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        NodeServerApi nodeServerApi = retrofit.create(NodeServerApi.class);
+
+        Call<List<AutodeskResponse>> call = nodeServerApi.getTest();
+
+        call.enqueue(new Callback<List<AutodeskResponse>>() {
+
+
+            @Override
+            public void onResponse(Call<List<AutodeskResponse>> call, Response<List<AutodeskResponse>> response) {
+                if(!response.isSuccessful()){
+                    test.setText("FAIELD");
+                    return;
+                }
+
+                List<AutodeskResponse> result = response.body();
+                for(AutodeskResponse resultObj : result){
+                    test.setText(resultObj.getInfo());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AutodeskResponse>> call, Throwable t) {
+                test.setText("FAILED" + t.getMessage());
+            }
+        });
     }
 }
