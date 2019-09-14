@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.google.gson.Gson;
 
 import org.w3c.dom.Node;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Array;
 import java.net.Authenticator;
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         // Adds the view to the layout
         layout.addView(image);
 
-        if(bitmapArray.size() == 12){
+        if(bitmapArray.size() == 2){
             sendImageToNode(bitmapArray);
         }
 //        test();
@@ -86,11 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
         NodeServerApi nodeServerApi = retrofit.create(NodeServerApi.class);
 
-        ArrayList<String> dummyString = new ArrayList<>();
-        dummyString.add("Hello");
-        dummyString.add("World");
+        ArrayList<String> imageString = new ArrayList<>();
+        for(int i = 0; i < bitmapArray.size(); i++){
+            imageString.add(convertToBase64(bitmapArray.get(i)));
+        }
 
-        Call<NodeResponse> call = nodeServerApi.sendImage(dummyString);
+        Call<NodeResponse> call = nodeServerApi.sendImage(imageString);
 
         call.enqueue(new Callback<NodeResponse>() {
 
@@ -112,6 +115,21 @@ public class MainActivity extends AppCompatActivity {
                 test.setText("FAILED" + t.getMessage());
             }
         });
+    }
+
+    private String convertToBase64(Bitmap bm)
+
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+        byte[] byteArrayImage = baos.toByteArray();
+
+        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+
+        return encodedImage;
+
     }
 
 //    public void test(){

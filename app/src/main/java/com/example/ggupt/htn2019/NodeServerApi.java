@@ -7,6 +7,8 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
@@ -17,9 +19,10 @@ public interface NodeServerApi {
     @GET("test")
     Call<List<AutodeskResponse>> getTest();
 
-    @POST
-    Call<NodeResponse> sendImage(@Body ArrayList<String> images);
-
+    @FormUrlEncoded
+    @POST("api/firebase")
+    Call<NodeResponse> sendImage(
+            @Field("imageArray") ArrayList<String> images);
 
 
 }
