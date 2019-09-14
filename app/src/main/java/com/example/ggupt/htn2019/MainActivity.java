@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 
 import org.w3c.dom.Node;
 
+import java.lang.reflect.Array;
 import java.net.Authenticator;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +71,14 @@ public class MainActivity extends AppCompatActivity {
         image.setImageBitmap(bitmap);
         // Adds the view to the layout
         layout.addView(image);
-        test();
+
+        if(bitmapArray.size() == 12){
+            sendImageToNode(bitmapArray);
+        }
+//        test();
     }
 
-    public void test(){
+    public void sendImageToNode(ArrayList<Bitmap> bitmapArray){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.33.141.252:3000")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -81,28 +86,64 @@ public class MainActivity extends AppCompatActivity {
 
         NodeServerApi nodeServerApi = retrofit.create(NodeServerApi.class);
 
-        Call<List<AutodeskResponse>> call = nodeServerApi.getTest();
+        ArrayList<String> dummyString = new ArrayList<>();
+        dummyString.add("Hello");
+        dummyString.add("World");
 
-        call.enqueue(new Callback<List<AutodeskResponse>>() {
+        Call<NodeResponse> call = nodeServerApi.sendImage(dummyString);
+
+        call.enqueue(new Callback<NodeResponse>() {
 
 
             @Override
-            public void onResponse(Call<List<AutodeskResponse>> call, Response<List<AutodeskResponse>> response) {
+            public void onResponse(Call<NodeResponse> call, Response<NodeResponse> response) {
                 if(!response.isSuccessful()){
-                    test.setText("FAIELD");
-                    return;
+                    test.setText("FAILED");
                 }
 
-                List<AutodeskResponse> result = response.body();
-                for(AutodeskResponse resultObj : result){
-                    test.setText(resultObj.getInfo());
+                NodeResponse nodeResponse = response.body();
+                if(nodeResponse.isResult()){
+                    test.setText(nodeResponse.getMessage());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<AutodeskResponse>> call, Throwable t) {
+            public void onFailure(Call<NodeResponse> call, Throwable t) {
                 test.setText("FAILED" + t.getMessage());
             }
         });
     }
+
+//    public void test(){
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("http://10.33.141.252:3000")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        NodeServerApi nodeServerApi = retrofit.create(NodeServerApi.class);
+//
+//        Call<List<AutodeskResponse>> call = nodeServerApi.getTest();
+//
+//        call.enqueue(new Callback<List<AutodeskResponse>>() {
+//
+//
+//            @Override
+//            public void onResponse(Call<List<AutodeskResponse>> call, Response<List<AutodeskResponse>> response) {
+//                if(!response.isSuccessful()){
+//                    test.setText("FAIELD");
+//                    return;
+//                }
+//
+//                List<AutodeskResponse> result = response.body();
+//                for(AutodeskResponse resultObj : result){
+//                    test.setText(resultObj.getInfo());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<AutodeskResponse>> call, Throwable t) {
+//                test.setText("FAILED" + t.getMessage());
+//            }
+//        });
+//    }
 }
