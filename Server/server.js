@@ -90,6 +90,34 @@ res.json({message: "Success: User Save.", result: true});
 
 });
 
+// sending images to firebase
+
+app.post('/api/firebase', function(req, res) {
+
+    // var userEmail = req.body.user_email;
+ 
+     var data = req.body;
+ 
+ usersRef.push(data, function(err) {
+ 
+ if (err) {
+ 
+ res.send(err)
+ 
+ } else {
+ 
+ // var key = Object.keys(snapshot.val())[0];
+ 
+ // console.log(key);
+ 
+ res.json({message: "Success: User Save.", result: true});
+ 
+ }
+ 
+ });
+ 
+ });
+ 
 // update user
 
 app.put('/api/updateUser', function(req, res) {
