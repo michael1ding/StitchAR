@@ -1,18 +1,12 @@
 var express  = require('express');
-
 var app      = express();                              // create our app w/ express
-
 var Firebase = require('firebase');
-
 var morgan = require('morgan');      
-
 var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
-
 var methodOverride = require('method-override');
-
 var multer  =   require('multer');
-
 var fs = require("fs");
+var base64ToImage = require('base64-to-image');
 
 app.use(function(req, res, next) { //allow cross origin requests
 
@@ -62,6 +56,14 @@ app.get('/', function (req, res) {
 
 })
 
+function getJPGFromFirebase(picturedata) {
+    for (i = 0; i < picturedata.length; i++) {
+        var base64Str = picturedata.i;
+        var path ='/Users/admin/Documents/HTN2019/Server/Pictures_jpg';
+        var optionalObj = {'fileName': i , 'type':'jpg'};
+        base64ToImage(base64Str,path,optionalObj); 
+      } 
+}
 // create user
 
 app.post('/api/createUser', function(req, res) {
@@ -99,18 +101,15 @@ app.post('/api/firebase', function(req, res) {
      var data = req.body;
  
  usersRef.push(data, function(err) {
- 
+
  if (err) {
  
  res.send(err)
  
  } else {
- 
- // var key = Object.keys(snapshot.val())[0];
- 
- // console.log(key);
- 
- res.json({message: "Success: User Save.", result: true});
+
+    getJPGFromFirebase(data.picture || null);
+    res.json({message: "Success: User Save.", result: res});
  
  }
  
