@@ -7,6 +7,7 @@ var methodOverride = require('method-override');
 var multer  =   require('multer');
 var fs = require("fs");
 var base64ToImage = require('base64-to-image');
+var download = require('download-file');
 
 app.use(function(req, res, next) { //allow cross origin requests
 
@@ -55,6 +56,23 @@ app.get('/', function (req, res) {
   res.sendfile('./index.html')
 
 })
+
+//download
+function downloadZIP(url) {
+    //var url = "https://github.com/ManethKulatunge/GeoTabChallenge"
+     
+    var options = {
+        directory: "./",
+        filename: "yoyo.zip"
+    }
+     
+    download(url, options, function(err){
+        if (err) throw err
+        console.log("meow")
+    }) 
+
+    extractZIP(options.filename)
+}
 
 function getJPGFromFirebase(picturedata) {
     for (i = 0; i < picturedata.length; i++) {
@@ -108,8 +126,10 @@ app.post('/api/firebase', function(req, res) {
  
  } else {
 
-    getJPGFromFirebase(data.picture || null);
-    res.json({message: "Success: User Save.", result: res});
+    //getJPGFromFirebase(data.picture || null);
+    console.log(data);
+    downloadAndExtractZIP(data.url || null);
+    res.json({message: "Success: User Save.", result: true});
  
  }
  
@@ -237,6 +257,7 @@ app.post('/api/login', function(req, res) {
         });
 
 });
+
 
 app.listen(3000);
 
