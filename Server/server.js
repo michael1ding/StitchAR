@@ -125,6 +125,16 @@ res.json({message: "Success: User Save.", result: true});
 
 });
 
+//get images 
+app.get('/api/image', function(req,res) {
+    if (req.body.id == '000001') {
+        res.sendFile(__dirname + '/result.obj');
+    }
+
+    if (req.body.id == '000001a') {
+        res.sendFile(__dirname + '/result.mtl');
+    }
+});
 // sending images to firebase
 
 app.post('/api/firebase', function(req, res) {
