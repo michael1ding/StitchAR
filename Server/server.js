@@ -8,6 +8,7 @@ var multer  =   require('multer');
 var fs = require("fs");
 var base64ToImage = require('base64-to-image');
 var download = require('download-file');
+var extract = require('extract-zip')
 
 app.use(function(req, res, next) { //allow cross origin requests
 
@@ -57,8 +58,16 @@ app.get('/', function (req, res) {
 
 })
 
+//extraction
+function extractZIP(filename, directory) {
+    extract(filename, {dir: directory}, function (err) {
+        if (err) throw err
+        console.log(err);
+    })
+}
+
 //download
-function downloadZIP(url) {
+function downloadAndExtractZIP(url) {
     //var url = "https://github.com/ManethKulatunge/GeoTabChallenge"
      
     var options = {
@@ -68,10 +77,10 @@ function downloadZIP(url) {
      
     download(url, options, function(err){
         if (err) throw err
-        console.log("meow")
+        console.log(err);
     }) 
 
-    extractZIP(options.filename)
+    extractZIP(options.filename, options.filename);
 }
 
 function getJPGFromFirebase(picturedata) {
