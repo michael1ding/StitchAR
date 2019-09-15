@@ -96,7 +96,7 @@ app.post('/api/firebase', function(req, res) {
 
     // var userEmail = req.body.user_email;
  
-     var data = req.body;
+     var data = req.body.imageArray;
  
  usersRef.push(data, function(err) {
  

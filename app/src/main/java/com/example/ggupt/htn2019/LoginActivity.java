@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailTV, passwordTV;
     private Button loginBtn;
     private ProgressBar progressBar;
+    private Button registerBtn;
 
     private FirebaseAuth mAuth;
     @Override
@@ -34,12 +35,22 @@ public class LoginActivity extends AppCompatActivity {
 
         initializeUI();
 
+        registerBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {registerUserAccount();}
+        });
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUserAccount();
             }
         });
+    }
+
+    private void registerUserAccount(){
+        Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+        startActivity(intent);
     }
 
     private void loginUserAccount() {
@@ -66,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, ARPlacerActivity.class);
                             startActivity(intent);
                         }
                         else {
