@@ -131,37 +131,4 @@ public class MainActivity extends AppCompatActivity {
         return encodedImage;
 
     }
-
-//    public void test(){
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("http://10.33.141.252:3000")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        NodeServerApi nodeServerApi = retrofit.create(NodeServerApi.class);
-//
-//        Call<List<AutodeskResponse>> call = nodeServerApi.getTest();
-//
-//        call.enqueue(new Callback<List<AutodeskResponse>>() {
-//
-//
-//            @Override
-//            public void onResponse(Call<List<AutodeskResponse>> call, Response<List<AutodeskResponse>> response) {
-//                if(!response.isSuccessful()){
-//                    test.setText("FAIELD");
-//                    return;
-//                }
-//
-//                List<AutodeskResponse> result = response.body();
-//                for(AutodeskResponse resultObj : result){
-//                    test.setText(resultObj.getInfo());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<AutodeskResponse>> call, Throwable t) {
-//                test.setText("FAILED" + t.getMessage());
-//            }
-//        });
-//    }
 }

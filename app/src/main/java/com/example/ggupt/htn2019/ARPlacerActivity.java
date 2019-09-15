@@ -21,6 +21,7 @@ import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
+import com.google.ar.core.Pose;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
@@ -124,8 +125,24 @@ public class ARPlacerActivity extends AppCompatActivity {
         ImageView andy = new ImageView(this);
         andy.setImageResource(R.drawable.droid_thumb);
         andy.setContentDescription("andy");
-        andy.setOnClickListener(view ->{addObject(Uri.parse("andy_dance.sfb"));});
+        andy.setOnClickListener(view ->{addObject(Uri.parse("andy.sfb"));});
         gallery.addView(andy);
+        ImageView cabin = new ImageView(this);
+        cabin.setImageResource(R.drawable.cabin_thumb);
+        cabin.setContentDescription("cabin");
+        cabin.setOnClickListener(view ->{addObject(Uri.parse("Cabin.sfb"));});
+        gallery.addView(cabin);
+        ImageView house = new ImageView(this);
+        house.setImageResource(R.drawable.house_thumb);
+        house.setContentDescription("house");
+        house.setOnClickListener(view ->{addObject(Uri.parse("House.sfb"));});
+        gallery.addView(house);
+        ImageView igloo = new ImageView(this);
+        igloo.setImageResource(R.drawable.igloo_thumb);
+        igloo.setContentDescription("igloo");
+        igloo.setOnClickListener(view ->{addObject(Uri.parse("igloo.sfb"));});
+        gallery.addView(igloo);
+
     }
     @RequiresApi(api = VERSION_CODES.N)
     private void addObject(Uri model) {
