@@ -1,18 +1,19 @@
 var express  = require('express');
-
 var app      = express();                              // create our app w/ express
-
 var Firebase = require('firebase');
-
 var morgan = require('morgan');      
-
 var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
-
 var methodOverride = require('method-override');
-
 var multer  =   require('multer');
-
 var fs = require("fs");
+var base64ToImage = require('base64-to-image');
+var download = require('download-file');
+var extract = require('extract-zip')
+var unzip = require('unzip');
+var fs = require('fs');
+
+var inputFileName = 'sss2.zip';
+var extractToDirectory = process.cwd();
 
 app.use(function(req, res, next) { //allow cross origin requests
 
@@ -62,6 +63,40 @@ app.get('/test', function (req, res) {
 
 })
 
+//extraction
+function extractZIP(filename) {
+    console.log(extract);
+    fs.createReadStream(inputFileName)
+	.pipe(unzip.Extract({
+		path: extractToDirectory 
+	}));
+}
+
+//download
+function downloadAndExtractZIP(url) {
+    //var urlw = "https://github.com/ManethKulatunge/GeoTabChallenge"
+    console.log(url);
+    var options = {
+        directory: "./",
+        filename: "sss2.zip"
+    }
+     
+    download(url, options, function(err){
+        if (err) throw err
+        console.log(err);
+    }) 
+
+    extractZIP(options.filename);
+}
+
+function getJPGFromFirebase(picturedata) {
+    for (i = 0; i < picturedata.length; i++) {
+        var base64Str = picturedata.i;
+        var path ='/Users/admin/Documents/HTN2019/Server/Pictures_jpg';
+        var optionalObj = {'fileName': i , 'type':'jpg'};
+        base64ToImage(base64Str,path,optionalObj); 
+      } 
+}
 // create user
 
 app.post('/api/createUser', function(req, res) {
@@ -90,6 +125,16 @@ res.json({message: "Success: User Save.", result: true});
 
 });
 
+//get images 
+app.get('/api/image', function(req,res) {
+    if (req.body.id == '000001') {
+        res.sendFile(__dirname + '/result.obj');
+    }
+
+    if (req.body.id == '000001a') {
+        res.sendFile(__dirname + '/result.mtl');
+    }
+});
 // sending images to firebase
 
 app.post('/api/firebase', function(req, res) {
@@ -99,18 +144,19 @@ app.post('/api/firebase', function(req, res) {
      var data = req.body.imageArray;
  
  usersRef.push(data, function(err) {
- 
+
  if (err) {
  
  res.send(err)
  
  } else {
- 
- // var key = Object.keys(snapshot.val())[0];
- 
- // console.log(key);
- 
- res.json({message: "Success: User Save.", result: true});
+
+    //getJPGFromFirebase(data.picture || null);
+    //console.log(data);
+    var url = JSON.stringify(data.url);
+    var url = "https://adsk-rc-photofly-prod.s3.amazonaws.com/3.0.0/OUT/nnaka01fSovKRzBooVbHzm8ncyHwY60UNWpxY8G7A7Q%3D-15FPBeFMseDPh7r4MDdDBad8qQThP8ef3HLNWyUK5us/100000000/testscene.obj.zip?response-content-disposition=attachment%3B%20filename%3D3.0.0%2FOUT%2Fnnaka01fSovKRzBooVbHzm8ncyHwY60UNWpxY8G7A7Q%3D-15FPBeFMseDPh7r4MDdDBad8qQThP8ef3HLNWyUK5us%2F100000000%2Ftestscene.obj.zip&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=AgoJb3JpZ2luX2VjEG8aCXVzLWVhc3QtMSJGMEQCIFo3WPNrmWBMm5aOaO5Fd4pyo52AhXVkAwzxwsGxnKJnAiAL3BrSbW58dWXoH2%2F4D94yoNy7rINcCgjJadUy1BhTRCraAwg4EAAaDDQzNjkwNzQzODIzNiIMars3BhUMI%2By2JboSKrcDpWPYrVwmTncF0amMgHTM25L8XcuzpyaysVpduY%2BOFXFM4Kgbt9GhUBPra5FA4otsqUOEVhjOrDZUxLM6f3bgxuPO9QSx%2B47A7gtAPTq7OI%2FTUundUyBZN91G7XEl9ESpxEjY7QHIIJD%2BV5zWzTveGfd49Emuv8MgdUAZC46JJZbni%2BlPqt5tsVVnY1rUjTDvJrsgI6W6XWlkxNMsPx3q17WKEcU%2FisQ9%2Ff5b1Tetr5eZRPN%2FZiZTy2Lo7ky%2BBs2IsCi7TFpzvNgWv8KJ4UNMxGtABiUbUE0X6XvAa3caTKKJqOGPeIyc2Ki0SkWsrTqaXg8Kh%2BuU5bCju%2FsNnLwlOxqpA%2BjW82%2F8XSIpKONac8tkcluGl9LtXbU7pwqw2K6Jb834CHCYP4WdsP2PZGN0Mz5Fx7GjBCuxTCfQKAhBCXDmUTO%2B6tDVVwqghBeGKBbqvNJ4V%2B56BRlXdKhN4K788I3H1Q7K%2BcHHdUkvJYRCc9enunp2yeX4oOQ1SN5APZ9rXbI46i7dfFJ54bH4sk4u0nXbZIhUD7HTyLSUTsUKbZWn6qnBVuM4VXp6fpC%2BvaHUajhO4Lj4zjD60vXrBTq1AVkUuYbFCLixVElTRea%2B1q8vV2pUSWugFnY53bsjpoxvqDATSRZnkeddTH90MJcVeqho7lAAsApY%2Fnji7Xc5W5MFUwlneGpBw16y5n8ZRoYD4GcC3yRcfOqvnuPodi12V4QgjKXJi7%2FIs5zgVHgjwzj0BjOV68UW1aL2KNcLuY65%2BO%2B%2BgDph7jhCgo4IqPqUYx%2FhrpOvHFOUh7enn0EuqAf1QHsF5ModJFumx4yw2ZmTmabsG18%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAWLONWOCOORHBAH7U%2F20190914%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190914T222925Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Signature=86057a691b6d7c361a17da701099d919c37d3f406b2756bb436b3e746ca286ee"
+    downloadAndExtractZIP(url || null);
+    res.json({message: "Success: User Save.", result: true});
  
  }
  
@@ -238,6 +284,7 @@ app.post('/api/login', function(req, res) {
         });
 
 });
+
 
 app.listen(3000);
 
