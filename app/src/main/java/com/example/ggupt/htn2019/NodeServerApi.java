@@ -24,5 +24,6 @@ public interface NodeServerApi {
     Call<NodeResponse> sendImage(
             @Field("imageArray") ArrayList<String> images);
 
-
+    @GET("api/image/{id}")
+    Call<List<Repo>> getObject(@Path("id") String user);
 }

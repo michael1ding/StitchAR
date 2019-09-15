@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
 
-                            Intent intent = new Intent(LoginActivity.this, ARPlacerActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                         }
                         else {
@@ -93,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordTV = findViewById(R.id.password);
 
         loginBtn = findViewById(R.id.login);
+        registerBtn = findViewById(R.id.register);
         progressBar = findViewById(R.id.progressBar);
     }
 }
