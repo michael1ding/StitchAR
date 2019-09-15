@@ -32,12 +32,6 @@ dependencies {
     implementation "com.google.ar.sceneform.ux:sceneform-ux:1.8.0"
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
-
-    implementation 'com.android.support:design:29.+'
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0'
-    implementation 'android.arch.navigation:navigation-ui:1.0.0'
-    implementation 'android.arch.lifecycle:extensions:1.1.1'
-    testImplementation 'junit:junit:4.12'
     //noinspection GradleCompatible
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
