@@ -126,14 +126,56 @@ res.json({message: "Success: User Save.", result: true});
 });
 
 //get images 
-app.get('/api/image', function(req,res) {
-    if (req.body.id == '000001') {
+app.get('/api/image/:id', function(req,res) {
+    console.log(req.params.id);
+    if (req.params.id == '000001') {
         res.sendFile(__dirname + '/result.obj');
     }
 
-    if (req.body.id == '000001a') {
+    if (req.params.id == '000001a') {
         res.sendFile(__dirname + '/result.mtl');
     }
+
+    if (req.params.id == '000002') {
+        res.sendFile(__dirname + '/sampledata/andy_dance.sfb');
+    }
+
+    if (req.params.id == '000002a') {
+        res.sendFile(__dirname + '/sampledata/models/andy_dance.sfa');
+    }
+
+    if (req.params.id == '000003') {
+        res.sendFile(__dirname + '/sampledata/andy.sfb');
+    }
+
+    if (req.params.id == '000003a') {
+        res.sendFile(__dirname + '/sampledata/models/andy.sfa');
+    }
+
+    if (req.params.id == '000004') {
+        res.sendFile(__dirname + '/sampledata/Cabin.sfb');
+    }
+
+    if (req.params.id == '000004a') {
+        res.sendFile(__dirname + '/sampledata/models/Cabin.sfa');
+    }
+
+    if (req.params.id == '000005') {
+        res.sendFile(__dirname + '/sampledata/House.sfb');
+    }
+
+    if (req.params.id == '000005a') {
+        res.sendFile(__dirname + '/sampledata/models/House.sfa');
+    }
+
+    if (req.params.id == '000006') {
+        res.sendFile(__dirname + '/sampledata/igloo.sfb');
+    }
+
+    if (req.params.id == '000006a') {
+        res.sendFile(__dirname + '/sampledata/models/igloo.sfa');
+    }
+
 });
 // sending images to firebase
 
